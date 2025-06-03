@@ -12,11 +12,6 @@ import time
 import subprocess
 
 # === CONFIGURATION ===
-EXCLUDED_FILES = {".DS_Store", "Thumbs.db", ".TemporaryItems", ".Spotlight-V100", ".fseventsd"}
-
-def is_valid_file(path):
-    return path.is_file() and path.name not in EXCLUDED_FILES
-
 def get_source_directory():
     config_path = script_dir / "localDataSync/metaData/source_directory.json"
     if config_path.exists():
@@ -59,7 +54,7 @@ combined_prompt = (
     'buttons {"Cancel", "Append/Update", "Delete and Replace"} default button "Append/Update"'
 )
 combined_response = subprocess.run(["osascript", "-e", combined_prompt], capture_output=True, text=True)
-if "Cancel" in combined_response.stdout:
+if combined_response.returncode != 0:
     print("❌ Backup cancelled by user.")
     exit(0)
 delete_and_replace = "Delete and Replace" in combined_response.stdout
@@ -67,6 +62,9 @@ delete_and_replace = "Delete and Replace" in combined_response.stdout
 # Ask user if zip should be included
 zip_prompt_script = 'display dialog "Include zip backup?\n\n(This may take several minutes depending on your folder size.)" buttons {"No", "Yes"} default button "Yes"'
 zip_response = subprocess.run(["osascript", "-e", zip_prompt_script], capture_output=True, text=True)
+if zip_response.returncode != 0:
+    print("❌ Backup cancelled by user.")
+    exit(0)
 include_zip = "Yes" in zip_response.stdout
 
 start_time = time.time()
@@ -85,7 +83,7 @@ if not metadata_path.exists():
         return hasher.hexdigest()
 
     for src_path in source_dir.rglob("*"):
-        if is_valid_file(src_path):
+        if src_path.is_file():
             rel_path = str(src_path.relative_to(source_dir))
             mtime = os.path.getmtime(src_path)
             file_hash = compute_file_hash(src_path)
@@ -115,10 +113,10 @@ all_files = []
 
 for item in source_dir.iterdir():
     if item.is_dir():
-        latest_mtime = max((os.path.getmtime(f) for f in item.rglob("*") if is_valid_file(f)), default=0)
+        latest_mtime = max((os.path.getmtime(f) for f in item.rglob("*") if f.is_file()), default=0)
         any_new_or_modified = False
         for file in item.rglob("*"):
-            if not is_valid_file(file):
+            if not file.is_file():
                 continue
             rel_path = str(file.relative_to(source_dir))
             file_mtime = os.path.getmtime(file)
@@ -127,10 +125,10 @@ for item in source_dir.iterdir():
                 any_new_or_modified = True
                 break
         if any_new_or_modified:
-            all_files.extend([f for f in item.rglob("*") if is_valid_file(f)])
+            all_files.extend([f for f in item.rglob("*") if f.is_file()])
         else:
             print(f"Skipping unchanged folder: {item.name}")
-    elif is_valid_file(item):
+    elif item.is_file():
         all_files.append(item)
 
 print(f"🔍 Files selected for evaluation: {len(all_files)}")
@@ -184,8 +182,6 @@ if include_zip:
     for root_dir, _, files in os.walk(source_dir):
         for name in files:
             full_path = os.path.join(root_dir, name)
-            if Path(full_path).name in EXCLUDED_FILES:
-                continue
             file_list_for_zip.append(full_path)
 
     est_seconds = len(file_list_for_zip) * 0.02  # rough 20ms per file

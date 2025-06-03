@@ -88,3 +88,34 @@ localDataSync/
 ## 📬 Feedback & Contributions
 
 Pull requests are welcome! If you'd like to add notifications, smarter exclusion filters, or OneDrive API integration, feel free to open an issue or PR.
+
+---
+
+### 🔐 Granting Permission if You See “App is Damaged”
+
+macOS may block the app the first time you open it with:
+
+> “SyncFilesApp” is damaged and can’t be opened.
+
+To bypass:
+
+1. Open **Terminal** manually
+2. Navigate to the app folder, e.g.:
+
+```bash
+cd ~/Documents/SyncFilesApp
+```
+
+3. Then run:
+
+```bash
+xattr -r -d com.apple.quarantine ./appLauncher/SyncFilesApp.app
+```
+
+Now try launching it again:
+
+```bash
+open ./appLauncher/SyncFilesApp.app
+```
+
+---
