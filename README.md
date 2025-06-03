@@ -1,6 +1,6 @@
 # SyncOnedriveApp
 
-A lightweight macOS app to stage your local folders for OneDrive syncing. It mirrors changed files to a `to_upload` folder and optionally zips your entire source folder into a compressed archive. Designed for users who want a smart, version-aware backup before manually uploading to OneDrive.
+A lightweight macOS app to stage your local folders for manual OneDrive syncing. It mirrors newly created and changed files to a `to_upload` folder and optionally zips your entire source folder into a compressed archive. Designed for users who may be unable or prohibited from having Onedrive Sync locally on their MAC OS and want a smart, version-aware backup and file tracking system to aid in manually uploading new and edited files to OneDrive.
 
 ---
 
@@ -53,6 +53,8 @@ SyncOnedriveApp/
    ```
 
 5. After verifying, manually drag these files to your OneDrive folder.
+
+6. Optional: After syncing with Onedrive through your browser, delete all files within the `to_upload` folder. Alternatively, you will be prompted to clear the folder next time the app is executed. 
 
 ---
 
