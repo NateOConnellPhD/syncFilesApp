@@ -39,7 +39,9 @@ SyncOnedriveApp/
 
 1. **Clone or download** the repo.
 
-2. Open `SyncOnedriveApp/appLauncher/SyncOnedriveApp.app`.
+2. Open `SyncOnedriveApp/appLauncher/SyncFilesApp.app`.
+
+  *Note: If you see warning "App is Damaged", see end of this README to bypass this*
 
 3. On first run, you'll be prompted to:
    - Select a parent folder (defaults to `~/Documents`).

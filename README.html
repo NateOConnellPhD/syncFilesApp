@@ -354,11 +354,13 @@ display: none;
 
 <div id="synconedriveapp" class="section level1">
 <h1>SyncOnedriveApp</h1>
-<p>A lightweight macOS app to stage your local folders for OneDrive
-syncing. It mirrors changed files to a <code>to_upload</code> folder and
-optionally zips your entire source folder into a compressed archive.
-Designed for users who want a smart, version-aware backup before
-manually uploading to OneDrive.</p>
+<p>A lightweight macOS app to stage your local folders for manual
+OneDrive syncing. It mirrors newly created and changed files to a
+<code>to_upload</code> folder and optionally zips your entire source
+folder into a compressed archive. Designed for users who may be unable
+or prohibited from having Onedrive Sync locally on their MAC OS and want
+a smart, version-aware backup and file tracking system to aid in
+manually uploading new and edited files to OneDrive.</p>
 <hr />
 <div id="folder-structure" class="section level2">
 <h2>📁 Folder Structure</h2>
@@ -396,7 +398,11 @@ based on hash and modified time.</li>
 <ol style="list-style-type: decimal">
 <li><p><strong>Clone or download</strong> the repo.</p></li>
 <li><p>Open
-<code>SyncOnedriveApp/appLauncher/SyncOnedriveApp.app</code>.</p></li>
+<code>SyncOnedriveApp/appLauncher/SyncFilesApp.app</code>.</p></li>
+</ol>
+<p><em>Note: If you see warning “App is Damaged”, see end of this README
+to bypass this</em></p>
+<ol start="3" style="list-style-type: decimal">
 <li><p>On first run, you’ll be prompted to:</p>
 <ul>
 <li>Select a parent folder (defaults to <code>~/Documents</code>).</li>
@@ -407,6 +413,10 @@ based on hash and modified time.</li>
 <pre><code>SyncOnedriveApp/localDataSync/to_upload</code></pre></li>
 <li><p>After verifying, manually drag these files to your OneDrive
 folder.</p></li>
+<li><p>Optional: After syncing with Onedrive through your browser,
+delete all files within the <code>to_upload</code> folder.
+Alternatively, you will be prompted to clear the folder next time the
+app is executed.</p></li>
 </ol>
 <hr />
 </div>
@@ -441,6 +451,27 @@ localDataSync/</code></pre>
 <p>Pull requests are welcome! If you’d like to add notifications,
 smarter exclusion filters, or OneDrive API integration, feel free to
 open an issue or PR.</p>
+<hr />
+<div id="granting-permission-if-you-see-app-is-damaged" class="section level3">
+<h3>🔐 Granting Permission if You See “App is Damaged”</h3>
+<p>macOS may block the app the first time you open it with:</p>
+<blockquote>
+<p>“SyncFilesApp” is damaged and can’t be opened.</p>
+</blockquote>
+<p>To bypass:</p>
+<ol style="list-style-type: decimal">
+<li>Open <strong>Terminal</strong> manually</li>
+<li>Navigate to the app folder, e.g.:</li>
+</ol>
+<pre class="bash"><code>cd ~/Documents/SyncFilesApp</code></pre>
+<ol start="3" style="list-style-type: decimal">
+<li>Then run:</li>
+</ol>
+<pre class="bash"><code>xattr -r -d com.apple.quarantine ./appLauncher/SyncFilesApp.app</code></pre>
+<p>Now try launching it again:</p>
+<pre class="bash"><code>open ./appLauncher/SyncFilesApp.app</code></pre>
+<hr />
+</div>
 </div>
 </div>
 
